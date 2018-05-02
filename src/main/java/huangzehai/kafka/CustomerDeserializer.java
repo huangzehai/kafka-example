@@ -15,16 +15,21 @@ public class CustomerDeserializer implements Deserializer<Customer> {
     }
 
     @Override
-    public Customer deserialize(String topic, byte[] bytes) {
-        if (bytes == null) {
+    public Customer deserialize(String topic, byte[] data) {
+        if (data == null) {
             return null;
         }
         try {
-            if (bytes.length >= 8) {
-                byte[] idBytes = Arrays.copyOfRange(bytes, 0, 4);
-                byte[] nameBytes = Arrays.copyOfRange(bytes, 8, bytes.length);
-                int id = ByteBuffer.wrap(idBytes).getInt();
-                String name = new String(nameBytes, "UTF-8");
+            if (data.length >= 8) {
+                int id;
+                int nameSize;
+                String name;
+                ByteBuffer buffer = ByteBuffer.wrap(data);
+                id = buffer.getInt();
+                nameSize = buffer.getInt();
+                byte[] nameBytes = new byte[nameSize];
+                buffer.get(nameBytes);
+                name = new String(nameBytes, "UTF-8");
                 return new Customer(id, name);
             }
         } catch (Exception e) {

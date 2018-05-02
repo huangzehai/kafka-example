@@ -25,7 +25,7 @@ public class CustomerProducer {
 
         for (int i = 0; i < 10; i++) {
 
-            ProducerRecord<String, Customer> record = new ProducerRecord<>("test", String.valueOf(i), new Customer(i,"name-"+i));
+            ProducerRecord<String, Customer> record = new ProducerRecord<>("consumer", String.valueOf(i), new Customer(i,"name-"+i));
             producer.send(record, (recordMetadata, e) -> {
                 if (recordMetadata != null) {
                     System.out.println(recordMetadata);
